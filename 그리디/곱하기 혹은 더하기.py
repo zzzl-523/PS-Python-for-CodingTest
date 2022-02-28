@@ -5,10 +5,10 @@ for c in str:
 
 result = list[0]
 
-for n in list:
-    if n <= 1 or result <= 1:
-        result += n
+for i in range(1, len(list)):
+    if list[i] <= 1 or result <= 1:
+        result += list[i]
     else:
-        result *= n
+        result *= list[i]
 
 print(result)
