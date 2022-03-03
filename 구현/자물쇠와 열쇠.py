@@ -33,6 +33,7 @@ def solution(key, lock):
         for x in range(n*2):
             for y in range(n*2):
                 
+                
                 # 자물쇠에 열쇠 끼워 넣기
                 for i in range(m):
                     for j in range(m):
