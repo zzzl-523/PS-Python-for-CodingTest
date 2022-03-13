@@ -1,37 +1,48 @@
 from collections import deque
-
 N, M, V = map(int, input().split())
-graph = [[] for _ in range(N+1)]
-visited = [False]*(N+1)
-visited_bfs = [False]*(N+1)
 
-for _ in range(M):
+graph = [[] for _ in range(N+1)]
+visited_dfs = [False]*(N+1)
+visited_bfs = [False]*(N+1)
+ans_dfs = str(V) + " "
+ans_bfs = str(V) + " "
+
+for i in range(1, M+1):
     a, b = map(int, input().split())
     graph[a].append(b)
     graph[b].append(a)
 
-str_dfs = ''
-str_bfs = ''
+for i in range(1, N+1):
+    graph[i].sort()
+    
+def DFS(v):
+    global ans_dfs
+    visited_dfs[v] = True
 
-def DFS(graph, v, str_dfs, visited):
-    visited[v] = True
-    str_dfs += str(v)
-    for n in graph[v]:
-        if visited[n] == False:
-            str_dfs += str(n)
-            DFS(graph, n, str_dfs, visited)
+    for node in graph[v]:
+        if visited_dfs[node] == False:
+            ans_dfs += str(node) + " "
+            DFS(node)
 
-def BFS(graph, v, str_bfs, visited_bfs):
+
+def BFS(v):
+    global ans_bfs
     q = deque(graph[v])
-    str_bfs += str(v)
+    visited_bfs[v] = True
+    for i in graph[v]:
+        visited_bfs[i] = True
+
     while q:
-        n = q.popleft()
-        if visited_bfs[n] == False:
-            str_bfs += str(n)
-            visited_bfs[n] = True
-            q.append(graph[n])
-            
+        vv = q.popleft()    
+        ans_bfs += str(vv) + " "
 
-DFS(graph, V, str_dfs, visited)
-BFS(graph, V, str_bfs, visited_bfs)
+        for node in graph[vv]:
+            if visited_bfs[node] == False:
+                visited_bfs[node] = True
+                q.append(node)
+                
 
+DFS(V)
+BFS(V)
+print(ans_dfs)
+print(ans_bfs)
