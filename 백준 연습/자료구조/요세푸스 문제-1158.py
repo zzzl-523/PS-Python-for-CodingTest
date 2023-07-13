@@ -14,14 +14,14 @@ for _ in range(N):
     if len(ppl_list) == 1:
         res_list.append(ppl_list[0])
         break
-    idx = prev_idx + (K-1)
-    prev_idx = idx%len(ppl_list)
+    idx = (prev_idx + (K-1))%len(ppl_list)
+    prev_idx = idx
 
-    if idx >= len(ppl_list) - 1:
-        idx = idx%len(ppl_list)
-        if ppl_list[idx] == prev_num:
-            idx += 1
-        prev_idx = idx
+    # if idx >= len(ppl_list) - 1:
+    #     idx = idx%len(ppl_list)
+    #     if ppl_list[idx] == prev_num:
+    #         idx += 1
+    #     prev_idx = idx
 
     num = ppl_list[idx]
     
