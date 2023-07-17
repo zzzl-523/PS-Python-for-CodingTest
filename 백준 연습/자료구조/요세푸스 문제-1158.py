@@ -17,12 +17,6 @@ for _ in range(N):
     idx = (prev_idx + (K-1))%len(ppl_list)
     prev_idx = idx
 
-    # if idx >= len(ppl_list) - 1:
-    #     idx = idx%len(ppl_list)
-    #     if ppl_list[idx] == prev_num:
-    #         idx += 1
-    #     prev_idx = idx
-
     num = ppl_list[idx]
     
     res_list.append(num)
