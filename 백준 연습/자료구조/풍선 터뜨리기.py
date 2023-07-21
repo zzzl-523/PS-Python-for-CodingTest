@@ -30,11 +30,13 @@ result = [1]
 for _ in range(N-1):
     moved = now_idx + num_list[now_idx]
 
+    num_list[now_idx] = 0
     moved = check(num_list, moved, num_list[now_idx]>0)
     
-    num_list[now_idx] = 0
     now_idx = moved
 
     result.append(moved + 1)
+    # num_list.remove(num_list[moved])
+    # now_idx -= 1
 
 print(str(result).replace(',','').replace('[','').replace(']',''))
