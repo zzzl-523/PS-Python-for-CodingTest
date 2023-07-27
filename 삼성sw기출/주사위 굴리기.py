@@ -68,6 +68,3 @@ for command in commands:
     
     x = nx
     y = ny
-
-
-
