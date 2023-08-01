@@ -5,9 +5,9 @@
 # 2. 좌우대칭 -> col만 -해주기
 # 3. 상하좌우 대칭 -> row, col -해주기
 # 회전
-# 1. 오른쪽 90도 -> row, col 위치 바꾸기
+# 1. 오른쪽 90도 -> row만 -하고, x, y 위치 바꾸기
 # 2. 180도 -> 상하좌우 대칭이랑 같음
-# 3. 270도 -> row, col 위치 바꾸고 상하좌우 대칭
+# 3. 270도 -> col만 -하고, x,y 위치 바꾸기
 
 
 import sys
@@ -39,16 +39,14 @@ for i in range(N):
                         np_x = p[0] + (tetromino[idx][0] * flips[idx3][0])
                         np_y = p[1] + (tetromino[idx][1] * flips[idx3][1]) 
                     elif idx3 == 4:
-                        # print("들어가긴하나?")
-                        # 1. 오른쪽 90도 -> row, col 위치 바꾸기
-                        np_x = p[0] + tetromino[idx][1]
-                        np_y = p[1] + tetromino[idx][0]
+                        # 1. 오른쪽 90도 -> row만 -하고, x, y 위치 바꾸기
+                        np_x = p[0] + (tetromino[idx][1] * flips[1][0])
+                        np_y = p[1] + (tetromino[idx][0] * flips[1][1])
                     elif idx3 == 5:
-                        # print("여기도?")
-                        # 3. 270도 -> row, col 위치 바꾸고 상하좌우 대칭
-                        np_x = p[0] + (tetromino[idx][1] * flips[3][0]) 
-                        np_y = p[1] + (tetromino[idx][0] * flips[3][1])
-
+                        # 3. 270도 -> col만 -하고, x,y 위치 바꾸기
+                        np_x = p[0] + (tetromino[idx][1] * flips[2][0]) 
+                        np_y = p[1] + (tetromino[idx][0] * flips[2][1])
+                        
                     if np_x < 0 or np_x >= N or np_y < 0 or np_y >= M:
                         break
 
@@ -60,10 +58,6 @@ for i in range(N):
                 for idx2 in range(4):
                     total += paper[np[idx2][0]][np[idx2][1]]
                 
-                if total > result:
-                    print(total, np)
-                    print(tetromino)
                 result = max(total, result)
-
-        
+       
 print(result)
