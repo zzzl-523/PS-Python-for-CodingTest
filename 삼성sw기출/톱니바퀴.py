@@ -36,11 +36,11 @@ while rotate_list:
     check[num] = (True, dir)
     for i in range(4):
         index = (num+i)
-        if index < 3 and states[index][1] and states[index][2] != states[(num+i+1)%4][-2]:
+        if index < 3 and index>i and states[index][1] and states[index][2] != states[(num+i+1)%4][-2]:
             print(states[index][2], states[(num+i+1)%4][-2])
             check[(num+i+1)%4] = (True, check[index][1]*(-1))
         index = (num-i)
-        if index >= 0 and states[index][1] and states[index][-2] != states[(num-i-1)%4][2]:
+        if index >= 0 and index<i and states[index][1] and states[index][-2] != states[(num-i-1)%4][2]:
             print(states[index][-2], states[(num-i-1)%4][2])
             check[(num-i-1)%4] = (True, check[index][1]*(-1))
 
