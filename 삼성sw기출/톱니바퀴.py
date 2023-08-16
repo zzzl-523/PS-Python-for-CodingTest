@@ -12,21 +12,21 @@
 #       회전 횟수 K번
 #       회전시킨 방법 순서대로 (톱니 번호, 방향)
 #           방향 1 -> 시계
-#           방향 2 -> 반시계
+#           방향 -1 -> 반시계
 
 from collections import deque
 import sys
 input = sys.stdin.readline
 
 # 톱니 상태 입력받기
-states = [deque(list(input())[:-1]) for _ in range(4)]
+states = [deque(map(int, list(input())[:-1])) for _ in range(4)]
 K = int(input())
 rotate_list = deque([tuple(map(int, input().split())) for _ in range(K)])
-
 # 회전시키면 Index=2가 움직이고, 맞닿은 쪽은 Index=-2가 움직인다
 # 1번째 -> idx 2
 # 2번째 -> idx -2
 # rotate 함수 ..?
+check = [(False, 0)]*4
 
 while rotate_list:
     num, dir = rotate_list.popleft()
@@ -34,20 +34,23 @@ while rotate_list:
     check = [(False, 0)]*4
 
     check[num] = (True, dir)
-    for i in range(4):
+    for i in range(0, 4):
         index = (num+i)
-        if index < 3 and index>i and states[index][1] and states[index][2] != states[(num+i+1)%4][-2]:
-            print(states[index][2], states[(num+i+1)%4][-2])
-            check[(num+i+1)%4] = (True, check[index][1]*(-1))
+        if (index < 3 and index>=num) and check[index] and states[index][2]!=states[(index+1)%4][-2]:
+            # print(states[index][2], states[(index+1)%4][-2]) # 이 값이 서로 달라야함
+            check[(index+1)%4] = (True, check[index][1]*(-1)) # 반대 방향으로 회전
+        
         index = (num-i)
-        if index >= 0 and index<i and states[index][1] and states[index][-2] != states[(num-i-1)%4][2]:
-            print(states[index][-2], states[(num-i-1)%4][2])
-            check[(num-i-1)%4] = (True, check[index][1]*(-1))
+        if (index > 0 and index<=num) and check[index] and states[index][-2]!=states[index-1][2]:
+            # print(states[index][-2], states[index-1][2]) # 이 값이 서로 달라야함
+            check[index-1] = (True, check[index][1]*(-1)) # 반대 방향으로 회전
 
-    print("check 출력 : ", check)
+    result = 0
     for i in range(4):
-        if check[index][0] == True:
-            states[index].rotate(check[index][1])
+        if check[i][0] == True:
+            states[i].rotate(check[i][1])
+        
+        if states[i][0] == 1:
+            result += 2**i
     
-    print("-----------------")
-    print(*states, sep='\n')
+print(result)
