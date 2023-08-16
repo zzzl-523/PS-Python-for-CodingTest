@@ -13,5 +13,3 @@ for i in range(2, int(math.sqrt(n)) + 1): # 제곱근까지만 판별하면 된�
 for i in range(2, n+1):
     if array[i]:
         print(i, end=' ')
-
-
