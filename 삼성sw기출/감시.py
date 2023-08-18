@@ -26,6 +26,7 @@ readline = sys.stdin.readline
 N, M = map(int, input().split()) # N-세로, M-가로
 states = [list(map(int, input().split())) for _ in range(N)]
 
+# 라이브러리 없이 deep copy를 하기 위한 함수
 def copy(arr):
     copy = [[[] for _ in range(M)] for _ in range(N)]
     for i in range(N):
@@ -72,6 +73,7 @@ for i in range(N):
 total = N*M - len(pos_list) - wall_cnt
 answer = total
 
+# CCTV 기능에 따라 빈 칸 카운트 하는 함수
 def count(cctv_pos, B, states_copy, result):
     cnt = result
     # print("B: ", B)
@@ -93,35 +95,29 @@ def count(cctv_pos, B, states_copy, result):
             
             x, y = nx, ny
     
-    # print(*states_copy, sep='\n')
-    # print(cnt)
     return [cnt, states_copy]
         
 # CCTV로 감시하는 칸 확인. 회전도 확인
 def check(index, result, states_copy):
     global answer
+
+    # 모든 CCTV 확인 끝나면 종료
     if index>len(pos_list)-1:
         # print('종료')
-        # print("----------------------------^.^")
         return result
 
     pos = pos_list[index]
     num = states_copy[pos[0]][pos[1]]
     cctv = cctv_list[num-1]
     rotates = rorate(cctv)
-    # print(rotates, sep = "\n")
-    for i in range(4):
-        tmp_states = copy(states_copy)
-        # print("----------------------------")
-        # print("새로운 로테이션입니당 번호는 ", i)
-        # print(pos, rotates[i])
+    
+    for i in range(4): # 모든 rotation에 대해 확인
+        tmp_states = copy(states_copy) # 각 rotation에 따른 결과를 분리하기 위해 새롭게 deep copy
+    
         cnt, tmp_states = count(pos, rotates[i], tmp_states, result)
-        # print(*tmp_states, sep="\n")
         total_result = check(index+1, cnt, tmp_states)
 
-        answer = min(answer, total_result)
-        # print(num, "로테이션 번호: ",i, "결과: ", total_result)
-        # print("정답: ", answer)
+        answer = min(answer, total_result) # min이면 answer 갱신
 
     return answer
 
