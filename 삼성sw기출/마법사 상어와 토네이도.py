@@ -48,7 +48,7 @@ def mul(morae, pos):
     x, y = pos
     new_mat = matA.copy() # 얕은 복사 -> new_mat 변경하면 matA도 변경됨!
     # print("점검: ")
-    # print(*new_mat, sep='\n')
+    
     num = N//2
     for i in range(x-num, x+num+1):
         # print(i)
