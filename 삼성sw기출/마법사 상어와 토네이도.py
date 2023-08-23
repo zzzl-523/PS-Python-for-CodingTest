@@ -32,7 +32,7 @@ matA = [list(map(int, input().split())) for _ in range(N)]
 matB = [
     [0, 0, 2, 0, 0],
     [0, 10, 7, 1, 0],
-    [5, 55, 0, 0, 0],
+    [5, -1, 0, 0, 0],
     [0, 10, 7, 1, 0],
     [0, 0, 2, 0, 0],
 ]
@@ -50,6 +50,9 @@ def mul(morae, pos):
     # print("점검: ")
     
     num = N//2
+    alpha = (0, 0)
+    total = 0
+    out_morae = 0
     for i in range(x-num, x+num+1):
         # print(i)
         for j in range(y-num, y+num+1):
@@ -58,12 +61,29 @@ def mul(morae, pos):
                 new_mat[i][j] = 0
             if j < 0 or j >= N or i < 0 or i >= N:
                 # print((i, j))
-                result += int(morae * matB[i-(x-num)][j-(y-num)]/100)
+                if matB[i-(x-num)][j-(y-num)] == -1:
+                    alpha = (-1, -1)
+                    continue
+                out_morae += int(morae * matB[i-(x-num)][j-(y-num)]/100)
                 continue
             # print(j, end=' ')
             # print(i, j)
+            if matB[i-(x-num)][j-(y-num)] == -1:
+                alpha = (i, j)
+                continue
             new_mat[i][j] += int(morae * matB[i-(x-num)][j-(y-num)]/100)
+            total += int(morae * matB[i-(x-num)][j-(y-num)]/100)
+
         print()
+    
+    total += out_morae
+
+    if alpha == (-1, -1):
+        out_morae += morae - total
+    else: new_mat[alpha[0]][alpha[1]] = morae - total
+    print(morae-total)
+
+    result += out_morae
 
     print("------------------------")
     # print("x, y 위치: ", (x, y))
