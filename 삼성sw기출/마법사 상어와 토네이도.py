@@ -29,12 +29,21 @@ input = sys.stdin.readline
 
 N = int(input())
 matA = [list(map(int, input().split())) for _ in range(N)]
+# matB = [
+#     [0, 0, 0, 0, 0, 0, 0],
+#     [0, 0, 2, 0, 0, 0, 0],
+#     [0, 10, 7, 1, 0, 0, 0],
+#     [5, -1, 0, 0, 0, 0, 0],
+#     [0, 10, 7, 1, 0, 0, 0],
+#     [0, 0, 2, 0, 0, 0, 0],
+#     [0, 0, 0, 0, 0, 0, 0]
+# ]
 matB = [
     [0, 0, 2, 0, 0],
     [0, 10, 7, 1, 0],
     [5, -1, 0, 0, 0],
     [0, 10, 7, 1, 0],
-    [0, 0, 2, 0, 0],
+    [0, 0, 2, 0, 0,]
 ]
 result = 0
 
@@ -49,7 +58,7 @@ def mul(morae, pos):
     new_mat = matA.copy() # 얕은 복사 -> new_mat 변경하면 matA도 변경됨!
     # print("점검: ")
     
-    num = N//2
+    num = len(matB)//2
     alpha = (0, 0)
     total = 0
     out_morae = 0
@@ -80,12 +89,14 @@ def mul(morae, pos):
 
     if alpha == (-1, -1):
         out_morae += morae - total
-    else: new_mat[alpha[0]][alpha[1]] = morae - total
+    else:
+        print(morae, total) 
+        new_mat[alpha[0]][alpha[1]] += morae - total
     print(morae-total)
 
     result += out_morae
 
-    print("------------------------")
+    print("------------------------결과")
     # print("x, y 위치: ", (x, y))
     print(*new_mat, sep='\n')
     print(result)
@@ -142,7 +153,8 @@ while x>=0 and y>=0:
             else:           # up
                 print("up", move)
                 x -= 1
-    
+
+        print((x, y))
         mul(matA[x][y], (x, y))
     
 
