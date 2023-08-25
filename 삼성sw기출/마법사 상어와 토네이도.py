@@ -81,16 +81,23 @@ def mul(morae, pos):
     return new_mat
 
 
-
-
 # matrix를 왼쪽으로 90도씩 회전시키는 함수
 def rotate():
     global matB
-    for i in range(len(matB)):
-        matB[i].reverse()
-    matB = list(map(list, zip(*matB)))
+    # for i in range(len(matB)):
+    #     matB[i].reverse()
+    # matB = list(map(list, zip(*matB)))
+  
+    temp = [[0]*len(matB) for _ in range(len(matB))]
+    length = len(matB)-1
 
+    for i in range(len(matB)):
+        for j in range(len(matB)):
+            temp[length - j][i] = matB[i][j]
+    
+    matB = temp
     return matB
+
 
 # 초기의 x, y는 중심부터 시작
 x, y = N//2, N//2
@@ -122,6 +129,5 @@ while x>=0 and y>=0:
 
         mul(matA[x][y], (x, y))
     
-
 
 print(result)
