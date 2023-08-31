@@ -12,69 +12,74 @@
 # 3. 
 # 더이상 없으면 answer 배열에 append
 
-from collections import deque
-q = deque
+# from collections import deque
+# q = deque
+
+# def solution(maps):
+#     answer = []
+#     visited = [[False for _ in range(len(maps[0]))] for _ in range(len(maps))]
+#     q = deque([])
+    
+
+#     # 상하좌우
+#     dxy = [(-1,0), (1,0), (0,-1), (0,1)]
+    
+#     for i in range(len(maps)):
+#         for j in range(len(maps[0])):
+#             if maps[i][j] != "X" and not visited[i][j] :
+#                 total = 0
+#                 q = [(i, j)]
+                
+#                 while q:
+#                     x, y = q.pop()
+
+#                     if visited[x][y]:
+#                         continue
+
+#                     visited[x][y] = True
+#                     total += int(maps[x][y])
+
+#                     for i in range(4):
+#                         nx = x + dxy[i][0]
+#                         ny = y + dxy[i][1]
+
+#                         if (0<=nx<len(maps) and 0<=ny<len(maps[0])) and not visited[nx][ny] and maps[nx][ny]!='X':
+#                             q.append((nx, ny))
+
+
+#                 answer.append(total)
+                    
+
+#     return sorted(answer) if answer else [-1]
+
+
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
 
 def solution(maps):
-    answer = []
-    num_pos_list = []
-    for i in range(len(maps)):
-        for j in range(len(maps[0])):
-            if maps[i][j] != 'X':
-                num_pos_list.append((i, j))
-
-
-    visited = [[False for _ in range(len(maps[0]))] for _ in range(len(maps))]
-    q = deque([])
-    total = 0
-
-    if len(num_pos_list)==0:
-        answer.append(-1)
-        return answer
-    else:
-        q.append(num_pos_list[0])
-
-    # 상하좌우
-    dxy = [(-1,0), (1,0), (0,-1), (0,1)]
+    col, row = len(maps), len(maps[0])
+    visited = [[False]*row for _ in range(col)]
     
-    def dfs(maps, x, y, visited, total):
-        if visited[x][y]:
-            return total
-        visited[x][y] = True
-        
-        if maps[x][y] != 'X':
-            total += int(maps[x][y])
-
-        cnt = 0
-        for i in range(4):
-            nx = x + dxy[i][0]
-            ny = y + dxy[i][1]
-
-            if (0<=nx<len(maps) and 0<=ny<len(maps[0])) and not visited[nx][ny] and maps[nx][ny]!='X':
-                dfs(maps, nx, ny, visited, total)
-                cnt += 1
-
-        # 이동할 곳 없을 때
-        if cnt == 0:
-            answer.append(total)
-            if not num_pos_list:
-                break
-            nx = num_pos_list[0][0]
-            ny = num_pos_list[0][1]
-            if not visited[nx][ny]:
-                q.append(num_pos_list[0])
-            total = 0
-        
-        return total
-
-    while q:
-        x, y = q.popleft()
-
-        dfs()
-
-        # 시간..
-        num_pos_list.remove((x, y))
-
-        
-
-    return sorted(answer)
+    answer = []
+    
+    for i in range(col) :
+        for j in range(row) :
+            if maps[i][j] != "X" and not visited[i][j] :
+                period = 0
+                q = [(j, i)]
+                
+                while q :
+                    x, y = q.pop()
+                    if visited[y][x] :
+                        continue
+                    visited[y][x] = True
+                    period += int(maps[y][x])
+                    
+                    for k in range(4) :
+                        ax, ay = x + dx[k], y + dy[k]
+                        if -1 < ax < row and -1 < ay < col and maps[ay][ax] != "X" and not visited[ay][ax] :
+                            q.append((ax, ay))
+                    
+                answer.append(period)
+    
+    return sorted(answer) if answer else [-1]
