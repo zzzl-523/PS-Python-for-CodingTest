@@ -44,7 +44,7 @@ def func(info, infos, visited, N):
             if check[0]==0 and check[1]==0 and check[2]==0 and check[3]==0:
                 # 아무도 없다는 뜻
                 second_condition(info, infos, visited, N)
-            elif:
+            else:
                 # 친구 있다는 뜻
                 first_condition()
 
