@@ -41,12 +41,14 @@ def func(info, infos, visited, N):
                     else:
                         check[idx] = visited[nx][ny]
 
+            print(check)
+            # print(*visited, sep="\n")
             if check[0]==0 and check[1]==0 and check[2]==0 and check[3]==0:
                 # 아무도 없다는 뜻
-                second_condition(info, infos, visited, N)
-            else:
+                second_condition(info, infos, visited)
+            # else:
                 # 친구 있다는 뜻
-                first_condition()
+                # first_condition()
 
 
 
@@ -66,11 +68,11 @@ infos = [[0]]*(N*N+1)
 visited = [[-1]*(N) for _ in range(N)]
 # print(*visited, sep='\n')
 
-for i in range(1, N*N):
+for i in range(1, N*N+1):
     value = list(map(int, input().split()))
     infos[i] = [value[0], value[1:]]
     
-    func(infos[i], infos, visited)
+    func(infos[i], infos, visited, N)
 
 print(*infos, sep='\n')
 
