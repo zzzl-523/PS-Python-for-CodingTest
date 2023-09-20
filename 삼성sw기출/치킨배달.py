@@ -26,5 +26,4 @@ for chi in combinations(chick, m):  # m개의 치킨집 선택
             chi_len = min(chi_len, abs(h[0] - chi[j][0]) + abs(h[1] - chi[j][1]))
         temp += chi_len
     result = min(result, temp)
-
 print(result)
