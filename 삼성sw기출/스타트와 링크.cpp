@@ -14,7 +14,6 @@ void DFS(int x, int pos) // x는 카운트 수, pos는 다음 값
 		int start, link;
 		start = 0;
 		link = 0;
-
 		for (int i = 1; i <= N; i++)
 		{
 			for (int j = 1; j <= N; j++)
