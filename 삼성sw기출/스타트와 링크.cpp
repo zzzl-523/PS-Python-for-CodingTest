@@ -7,6 +7,7 @@ bool check[22];
 int N;
 int ans = 1000000000; // 10억
 
+
 void DFS(int x, int pos) // x는 카운트 수, pos는 다음 값
 {
 	if (x == N / 2) // 카운트수가 정원의 1/2이 됐을 때 능력치합 계산
