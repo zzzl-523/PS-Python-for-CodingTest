@@ -23,34 +23,43 @@ for i in range(N):
 
 
 
-def fill(x, y, d1, d2, N):
+def fill(A, x, y, d1, d2, N):
     maps = [[0 for _ in range(N)] for _ in range(N)]
 
     if x+d1+d2>N or y-d1<0 or y+d2>N:
         return
-
+    
+    arr = [0, 0, 0, 0, 0] 
     # 채우기
     for i in range(N):
         for j in range(N):
             if i<x+d1 and j<=y:
-                maps[i][j] = 1
+                # maps[i][j] = 1
+                arr[0] += A[i][j]
             elif i<=x+d2 and j>y:
-                maps[i][j] = 2
+                # maps[i][j] = 2
+                arr[1] += A[i][j]
             elif i>=x+d1 and j<y-d1+d2:
-                maps[i][j] = 3
+                # maps[i][j] = 3
+                arr[2] += A[i][j]
             elif i>x+d2 and j>=y-d1+d2:
-                maps[i][j] = 4
+                # maps[i][j] = 4
+                arr[3] += A[i][j]
 
     
     for i in range(d1+1):
         # 경계선 1, 4
-        maps[x+i][y-i] = 5
-        maps[x+d2+i][y+d2-i] = 5
+        # maps[x+i][y-i] = 5
+        # maps[x+d2+i][y+d2-i] = 5
+        arr[4] += A[x+i][y-i]
+        arr[4] += A[x+d2+i][y+d2-i]
     
     for i in range(d2+1):
         # 경계선 2, 3
-        maps[x+i][y+i] = 5
-        maps[x+d1+i][y-d1+i] = 5
+        # maps[x+i][y+i] = 5
+        # maps[x+d1+i][y-d1+i] = 5
+        arr[4] += A[x+i][y+i]
+        arr[4] += A[x+d1+i][y-d1+i]
     
     # 5 채우기
     for i in range(x+1, x+d1+d2):
@@ -84,7 +93,8 @@ for d1 in range(1, N):
                 if x+d1+d2>=N or y+d2>=N or y-d1<0 :
                     continue
                 else:
-                    result = calculate(A, fill(x, y, d1, d2, N), N)
+                    # result = calculate(A, fill(x, y, d1, d2, N), N)
+                    result = fill(A, x, y ,d1, d2, N)
                     min_value = min(result, min_value)
                     
 
