@@ -15,33 +15,80 @@ arr = list(map(int, input().split()))
 arr = arr+arr
 
 # 2. i개
-def dfs(arr, visited, index, result, answer):
-    visited[index] = True
+def dfs(arr, visited, index, result, answer, checked):
     result.append(arr[index])
+    # print(result)
     
-    print(result)
     if len(result) == len(arr):
+        print("왜이래?")
+        print(result)
+
+        # check_arr = [-1]*17
+        # cnt = 0
+        # for idx, num in enumerate(result):
+            
+        #     if check_arr[num] == -1:
+        #         check_arr[num] = idx
+            
+        #     else:
+        #         if idx - check_arr[num] == num + 1:
+        #             cnt += 1
+                    
+            
+        # if cnt == len(arr)/2:
+        #     answer.append(result)
+        #     print(num, idx, check_arr[num],  result)
+
         answer.append(result)
+        # print("answer: ", answer)
         return 
     
-    print(arr[index], visited, sep='---')
+    # print(arr[index], visited, sep='---')
+    print(visited)
     for i in range(len(arr)):
         if not visited[i]:
-            temp = [num for num in visited]
-            dfs(arr, visited, i, result, answer)
-            print("이후는?")
-            visited = temp
+            visited[index] = True
+            temp_v = [num for num in visited]
+            temp_r = [num for num in result]
+            temp_c = [num for num in checked]
+
+            # print(arr[i], len(result), checked[arr[i]],  result)
+            if checked[arr[i]] == -1:
+                checked[arr[i]] = len(result)
+                dfs(arr, visited, i, result, answer, checked)
+            
+            else:
+                if len(result) - checked[arr[i]] == arr[i] + 1:
+                    # print(arr[i], i, checked[arr[i]],  result)
+                    dfs(arr, visited, i, result, answer, checked)
+                # else:
+                #     continue
+            # dfs(arr, visited, i, result, answer, checked)
+            
+            visited = temp_v
+            result = temp_r
+            checked = temp_c
+            
     
-    print("이거: ", visited)
-    print("answer: ", answer)
+    # print("이거: ", visited)
+    
     return 
 
 answer = []
+check_arr = [False]*17
 
-for i in range(len(arr)):
+for i in range(N):
     result = []
     visited = [False]*len(arr)
+    visited[i] = True
+    checked = [-1]*17
+    checked[arr[i]] = 0
+    print(checked)
     print("이번엔 뭐냐면 ", i)
-    dfs(arr, visited, i, result, answer)
+    dfs(arr, visited, i, result, answer, checked)
 
 print(answer)
+if len(answer):
+    print(*sorted(answer)[0])
+else:
+    print(-1)
