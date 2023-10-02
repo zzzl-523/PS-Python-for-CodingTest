@@ -2,46 +2,26 @@ import sys
 input = sys.stdin.readline
 
 N = int(input())
-RGB_list = []
+DP = []
 for i in range(N):
-    RGB_list.append(list(map(int, input().split())))
-    # for j in range(3):
-        # RGB_list[i].append(((j, arr[j])))
+    DP.append(list(map(int, input().split())))
 
-# print(RGB_list)
+for i in range(1, N-1):
+    for j in range(3):
+        if j == 0:
+            DP[i][j] += min(DP[i-1][1], DP[i-1][2])
+        elif j == 1:
+            DP[i][j] += min(DP[i-1][0], DP[i-1][2])
+        elif j == 2:
+            DP[i][j] += min(DP[i-1][0], DP[i-1][1])
 
-total = 0
 
-def DFS(RGB_list, index, prev_color, total, N, init_color, result):
-    
-    # print(index)
-    
-    
-    # print(RGB_list[index])
-    new_total = total + RGB_list[index][prev_color]
-    # print("total: ", new_total)
-
-    if index==N-1:
-        result.append(new_total)
-        return result
-
-    if index==N-2:
-        for i in range(3):
-            if i != prev_color and init_color!=i:
-                DFS(RGB_list, index+1, i, new_total, N, init_color, result)
-        
-    else:
-        for i in range(3):
-            if i != prev_color:
-                DFS(RGB_list, index+1, i, new_total, N, init_color, result)
-            
-    return result
-
-result = []
 for i in range(3):
-    if i==0:
-        result = DFS(RGB_list, 0, i, total, N, i, result)
-        # print("결과 한번: ", result)
-    else: result = min(result, DFS(RGB_list, 0, i, total, N, i, result))
+    if i == 0:
+        DP[N-1][i] += min(DP[(N-1)-1][1], DP[(N-1)-1][2])
+    elif i == 1:
+        DP[N-1][i] += min(DP[(N-1)-1][0], DP[(N-1)-1][2])
+    elif i == 2:
+        DP[N-1][i] += min(DP[(N-1)-1][0], DP[(N-1)-1][1])
 
-print(min(result))
+print(min(DP[-1]))
