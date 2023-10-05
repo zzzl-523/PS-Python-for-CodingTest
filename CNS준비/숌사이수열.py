@@ -23,21 +23,7 @@ def dfs(arr, visited, index, result, answer, checked):
         print("왜이래?")
         print(result)
 
-        # check_arr = [-1]*17
-        # cnt = 0
-        # for idx, num in enumerate(result):
-            
-        #     if check_arr[num] == -1:
-        #         check_arr[num] = idx
-            
-        #     else:
-        #         if idx - check_arr[num] == num + 1:
-        #             cnt += 1
-                    
-            
-        # if cnt == len(arr)/2:
-        #     answer.append(result)
-        #     print(num, idx, check_arr[num],  result)
+        
 
         answer.append(result)
         # print("answer: ", answer)
