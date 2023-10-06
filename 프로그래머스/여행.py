@@ -1,23 +1,25 @@
-test = [["ICN", "JFK"], ["HND", "IAD"], ["JFK", "HND"]]
-test2 = [["ICN", "SFO"], ["ICN", "ATL"], ["SFO", "ATL"], ["ATL", "ICN"], ["ATL","SFO"]]
+def find(time, arr, visited, prev, result):
+    global answer
+    nomore = True
+    if len(result)==len(arr)+1:
+        if not answer:
+            answer = result
+        else:
+            temp = [answer, result]
+            temp.sort()
+            answer = temp[0]
 
-def find(tickets, arr, visited, prev, result):
-    print(result)
-    print(arr, visited, prev)
     for i in range(len(arr)):
         # 이전 도착지 == 지금 출발지
+        
         if arr[i][0] == prev and (not visited[i]):
-            print("이거: ", arr[i])
-            result.append(arr[i])
-            visited[i] = True
-            prev = arr[i]
-            find(tickets, arr, visited, prev, result)
-    
-    print("return이욤: ", result)
-    return result
-            
+            nomore = False
+            new_visited = [thing for thing in visited]
+            new_visited[i] = True
+            find(time, arr, new_visited, arr[i][1], result+[arr[i][1]])   
 
 def solution(tickets):
+    global answer
     answer = []
     arr = []
     cnt = 0
@@ -34,14 +36,9 @@ def solution(tickets):
     for i in range(cnt):      
         visited = [False]*len(arr)
         visited[i] = True
-        result = [arr[i]]
-        answer.append(find(tickets, arr, visited, arr[i][1], result))
-        
-    answer.sort()
-    # answer.sort(key=lambda x:(x[0], x[1]))
+        result = arr[i]
+        find(i+1, arr, visited, arr[i][1], result)
+    
+    # answer.sort()
     # answer = answer[0]
-    return answer[0]
-
-
-print(solution(test))
-print(solution(test2))
+    return answer
