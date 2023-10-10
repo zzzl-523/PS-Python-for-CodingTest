@@ -37,5 +37,4 @@ int main() {
 
 	//top-down 방식
 	cout << dp(N,K);
-
 }
