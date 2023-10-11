@@ -34,7 +34,6 @@ int main() {
 		cin >> W >> V;
 		bag.push_back({ W,V });
 	}
-
 	//top-down 방식
 	cout << dp(N,K);
 }
