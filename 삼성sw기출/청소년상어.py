@@ -1,58 +1,86 @@
 # 청소년 상어 - BOJ 19236
-# DFS+구현
-import copy
 
-board = [[] for _ in range(4)]
+# 방향 8가지
+# 1. 상어의 이동
+#   물고기가 있으면 이동 가능
+#   해당 방향으로만 이동 가능.
+#   이동 가능 칸 없으면 집으로 돌아가고 물고기 이동
+# 2. 물고기의 이동
+#   해당 방향에 물고기 있으면 자리 교체
+#   상어 있거나 경계 벗어나면 반시계 회전
 
-dx = [-1, -1, 0, 1, 1, 1, 0, -1]
-dy = [0, -1, -1, -1, 0, 1, 1, 1]
+# 8가지 방향
+# [(-1,0),(-1,-1),(0,-1),(1,-1),(1,0),(1,1),(0,1),(-1,1),(-1,0)]
+# (물고기 번호, 방향)
+
+direction = [(-1,0),(-1,-1),(0,-1),(1,-1),(1,0),(1,1),(0,1),(-1,1),(-1,0)]
+
+def shark_move(num, dir):
+    return
+
+def fish_move(maps, fish_arr):
+    # 물고기 수 만큼
+    for fish in fish_arr:
+        # 물고기 잡아 먹히면 -1
+        if fish[0]>0:
+            num, pos, dir = fish
+            x, y = pos
+            print(num, pos, dir)
+            while True:
+                nx = x + direction[dir-1][0]
+                ny = y + direction[dir-1][1]
+
+                if nx<0 or nx>=4 or ny<0 or ny>=4 or maps[nx][ny][0]<0:
+                    # 가능한 게 없으면 회전
+                    dir = (dir+1)%9
+                    continue
+
+                # 가능하면 교체
+                print(maps[nx][ny])
+                new_num = maps[nx][ny][0]
+                maps[x][y], maps[nx][ny] = maps[nx][ny], maps[x][y]
+
+                # 위치만 업데이트
+                fish_arr[num-1][1] = (nx, ny)
+                fish_arr[new_num-1][1] = (x,y)
+
+                print(*maps, sep='\n')
+                print(fish_arr)
+
+                break
+
+    return
+
+
+maps = []
+fish_arr = [[] for _ in range(16)]
 
 for i in range(4):
-    data = list(map(int, input().split()))
-    fish = []
-    for j in range(4):
-        # 물고기 번호, 방향
-        fish.append([data[2*j], data[2*j+1]-1])
-    board[i] = fish
+    input_arr = list(map(int, input().split()))
+    arr = []
+    for j in range(len(input_arr)):
+        if j%2==0:
+            num = input_arr[j]
+            dir = input_arr[j+1]
+            # (물고기 번호, 방향)
+            arr.append([num, dir])
+            # fish_arr (물고기 번호, 현재 위치, 방향)
+            fish_arr[num-1] = [num, (i, j//2), dir]
+
+    maps.append(arr)
+
+print(*maps, sep='\n')
+print(fish_arr)
+
+# 상어의 위치
+x, y = 0, 0
+fish = maps[x][y]
+num = fish[0]
+fish_arr[num-1][0] = -1
+maps[x][y][0] = -1
+
+fish_move(maps, fish_arr)
+
+print(*maps, sep='\n')
 
 
-max_score = 0
-
-
-def dfs(sx, sy, score, board):
-    global max_score
-    score += board[sx][sy][0]
-    max_score = max(max_score, score)
-    board[sx][sy][0] = 0
-
-    # 물고기 움직임
-    for f in range(1, 17):
-        f_x, f_y = -1, -1
-        for x in range(4):
-            for y in range(4):
-                if board[x][y][0] == f:
-                    f_x, f_y = x, y
-                    break
-        if f_x == -1 and f_y == -1:
-            continue
-        f_d = board[f_x][f_y][1]
-
-        for i in range(8):
-            nd = (f_d+i) % 8
-            nx = f_x + dx[nd]
-            ny = f_y + dy[nd]
-            if not (0 <= nx < 4 and 0 <= ny < 4) or (nx == sx and ny == sy):
-                continue
-            board[f_x][f_y][1] = nd
-            board[f_x][f_y], board[nx][ny] = board[nx][ny], board[f_x][f_y]
-            break
-
-    # 상어 먹음
-    s_d = board[sx][sy][1]
-    for i in range(1, 5):
-        nx = sx + dx[s_d]*i
-        ny = sy + dy[s_d]*i
-        if (0<= nx < 4 and 0<= ny < 4) and board[nx][ny][0] > 0:
-            dfs(nx, ny, score, copy.deepcopy(board))
-
-dfs(0, 0, 0, board)
