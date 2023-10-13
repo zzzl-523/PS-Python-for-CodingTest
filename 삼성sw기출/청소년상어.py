@@ -13,74 +13,113 @@
 # [(-1,0),(-1,-1),(0,-1),(1,-1),(1,0),(1,1),(0,1),(-1,1),(-1,0)]
 # (물고기 번호, 방향)
 
-direction = [(-1,0),(-1,-1),(0,-1),(1,-1),(1,0),(1,1),(0,1),(-1,1),(-1,0)]
+direction = [(-1,0),(-1,-1),(0,-1),(1,-1),(1,0),(1,1),(0,1),(-1,1)]
+global result
+result = 0
 
-def shark_move(num, dir):
+def shark_move(maps, fish_arr, shark, total):
+    global result
+
+    # 상어 움직임
+    x, y = shark[0]
+    fish = fish_arr[maps[x][y]] # 잡힌 물고기
+
+    fish[0] = -1                # 물고기 잡힘 표시
+    maps[x][y] = -1
+    shark[1] = fish[2]          # 상어 방향 <- 물고기 방향
+
+    print("====== 물고기 잡음 ======")
+    print(*maps, sep='\n')
+
+    fish_move(maps, fish_arr, shark)
+
+    print("====== 물고기 이동 완료 ======")
+    print(*maps, sep='\n')
+    print("물고기 목록: ", *fish_arr, sep='\n')
+
+    for idx in range(4):
+        new_maps = [[] for _ in range(4)]
+        new_fish_arr = [[] for _ in range(17)]
+
+        nx = shark[0][0] + direction[shark[1]-1][0] + idx
+        ny = shark[0][1] + direction[shark[1]-1][1] + idx
+
+        if nx<0 or nx>=4 or ny<0 or ny>=4 or maps[nx][ny]==-1:
+            continue
+
+        for i in range(len(maps)):
+            for j in range(len(maps[0])):
+                new_maps[i].append(maps[i][j])
+
+        for i in range(1, len(fish_arr)):
+            new_fish = fish_arr[i]
+            new_fish_arr[i] = [new_fish[0], new_fish[1], new_fish[2]]
+
+        if total + maps[nx][ny] > result:
+            result = total + maps[nx][ny]
+
+        shark_move(new_maps, new_fish_arr, [(nx, ny), shark[1]], total)
+
+
     return
 
-def fish_move(maps, fish_arr):
-    # 물고기 수 만큼
-    for fish in fish_arr:
-        # 물고기 잡아 먹히면 -1
-        if fish[0]>0:
-            num, pos, dir = fish
-            x, y = pos
-            print(num, pos, dir)
-            while True:
-                nx = x + direction[dir-1][0]
-                ny = y + direction[dir-1][1]
+def fish_move(maps, fish_arr, shark):
+    for idx in range(1, len(fish_arr)):
+        fish = fish_arr[idx]
+        num, pos, dir = fish
+        x, y = pos
 
-                if nx<0 or nx>=4 or ny<0 or ny>=4 or maps[nx][ny][0]<0:
-                    # 가능한 게 없으면 회전
-                    dir = (dir+1)%9
+        if num>0:
+
+            for _ in range(8):
+                nx = x + direction[dir - 1][0]
+                ny = y + direction[dir - 1][1]
+
+                if nx<0 or nx>=4 or ny<0 or ny>=4 or (nx, ny)==shark[0]:
+                    dir = dir%8 + 1
                     continue
 
-                # 가능하면 교체
-                print(maps[nx][ny])
-                new_num = maps[nx][ny][0]
-                maps[x][y], maps[nx][ny] = maps[nx][ny], maps[x][y]
+                # print("=======이동 전 -----------")
+                # print(*maps, sep='\n')
+                # print(fish)
 
-                # 위치만 업데이트
-                fish_arr[num-1][1] = (nx, ny)
-                fish_arr[new_num-1][1] = (x,y)
+                # 물고기 이동
+                fish[2] = dir
+                fish[1] = (nx, ny)
+                fish_arr[maps[nx][ny]][1] = (x, y)
 
-                print(*maps, sep='\n')
-                print(fish_arr)
+                # print((x,y), (nx,ny))
+                # print(maps[x][y], maps[nx][ny])
+                maps[x][y], maps[nx][ny] = maps[nx][ny], maps[x][y] # 그냥 숫자
+
+                # print("이동 후 ============")
+                # print(*maps, sep='\n')
 
                 break
 
+
     return
 
 
-maps = []
-fish_arr = [[] for _ in range(16)]
+
+maps = [[] for _ in range(4)]
+fish_arr = [[] for _ in range(17)]
 
 for i in range(4):
-    input_arr = list(map(int, input().split()))
-    arr = []
-    for j in range(len(input_arr)):
-        if j%2==0:
-            num = input_arr[j]
-            dir = input_arr[j+1]
-            # (물고기 번호, 방향)
-            arr.append([num, dir])
-            # fish_arr (물고기 번호, 현재 위치, 방향)
-            fish_arr[num-1] = [num, (i, j//2), dir]
-
-    maps.append(arr)
+    arr = list(map(int, input().split()))
+    for j in range(len(arr)):
+        if j%2 == 0:
+            # 번호만 입력
+            maps[i].append(arr[j])
+            # (번호, 위치, 방향)
+            fish_arr[arr[j]] = [arr[j], (i, j//2), arr[j+1]]
 
 print(*maps, sep='\n')
 print(fish_arr)
 
-# 상어의 위치
-x, y = 0, 0
-fish = maps[x][y]
-num = fish[0]
-fish_arr[num-1][0] = -1
-maps[x][y][0] = -1
+# 상어 (위치, 방향)
+shark = [(0,0), 0]
 
-fish_move(maps, fish_arr)
+shark_move(maps, fish_arr, shark, maps[0][0])
 
-print(*maps, sep='\n')
-
-
+print(result)
