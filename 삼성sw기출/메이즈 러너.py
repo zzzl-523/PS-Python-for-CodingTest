@@ -20,169 +20,164 @@
 # 가장 작은 정사각형
 # 정사각형 시계방향 회전 90도. 회전된 벽은 내구도 1씩 깎임
 
-N, M, K = map(int, input().split())
-maps = [[11 for _ in range(N+1)]]
-members = []
-global exit
-exit = []
+N, M, K = tuple(map(int, input().split()))
+# 미로 입력
+board = [
+    [0]*(N+1)
+    for _ in range(N+1)
+]
+for i in range(1, N+1):
+    board[i] = [0] + list(map(int, input().split()))
 
-# maps 입력받기
-for _ in range(N):
-    maps.append([11] + list(map(int, input().split())))
-# members 입력받기
-for i in range(M, 0, -1):
-    x, y = arr = list(map(int, input().split()))
-    members.append(arr)
-    maps[x][y] = -1*i
-
-# exit 입력받기
-x, y = arr = list(map(int, input().split()))
-exit = arr
-maps[x][y] = 100
+new_board = [
+    [0]*(N+1)
+    for _ in range(N+1)
+]
 
 
-print(*maps, sep='\n')
+# 여행객 입력
+travelers = [(-1, -1)] + [
+    tuple(map(int, input().split()))
+    for _ in range(M)
+]
 
-def check_short(now, next, exit):
-    now_short = abs(now[0] - exit[0]) + abs(now[1] - exit[1])
-    next_short = abs(next[0] - exit[0]) + abs(next[1] - exit[1])
+# 출구 입력
+exit = tuple(map(int, input().split()))
 
-    if now_short < next_short:
-        return False
-    else:
-        return True
-def check_dist(now, exit):
-    return abs(now[0] - exit[0]) + abs(now[1] - exit[1])
+ans = 0
+sx, sy, square_size = 0, 0, 0
 
-def rotate_box(box_start, num, maps, members):
-    global exit
-    temp = [[0 for _ in range(num)] for _ in range(num)]
-    for i in range(num):
-        for j in range(num):
-            temp[i][j] = maps[box_start[0]+num-1-j][box_start[1]+i]
+# 여행객 이동
+def move_travelers():
+    global ans, exit
+    for i in range(1, M+1):
+        # 탈출
+        if travelers[i] == exit:
+            continue
 
-    for i in range(num):
-        for j in range(num):
-            if 0 < temp[i][j] < 10:
-                maps[box_start[0] + i][box_start[1] + j] = temp[i][j] -1
+        tx, ty = travelers[i]
+        ex, ey = exit
+
+        # 행이 다른 경우 행을 이동시켜봅니다.
+        if tx != ex:
+            nx, ny = tx, ty
+
+            if ex > nx:
+                nx += 1
             else:
-                if temp[i][j] < 0:
-                    members[temp[i][j]] = [box_start[0] + i, box_start[1] + j]
-                elif temp[i][j] == 100:
-                    exit = [box_start[0] + i, box_start[1] + j]
-                maps[box_start[0] + i][box_start[1] + j] = temp[i][j]
+                nx -= 1
 
-    print("---------exit, members 확인------")
-    print(exit, members)
+            # 벽이 없다면 행을 이동시킬 수 있습니다.
+            # 이 경우 행을 이동시키고 바로 다음 참가자로 넘어갑니다.
+            if not board[nx][ny]:
+                travelers[i] = (nx, ny)
+                ans += 1
+                continue
 
-# 1 2 3
-# 4 5 6
-# 7 8 9
-#
-# 7 4 1
-# 8 5 2
-# 9 6 3
-#
-# [3,1] [2,1] [1,1]
-# [3,2] [2,2] [1,2]
-# [3,3] [2,3] [1,3]
+        # 열이 다른 경우 열을 이동시켜봅니다.
+        if ty != ey:
+            nx, ny = tx, ty
+
+            if ey > ny:
+                ny += 1
+            else:
+                ny -= 1
+
+            # 벽이 없다면 행을 이동시킬 수 있습니다.
+            # 이 경우 열을 이동시킵니다.
+            if not board[nx][ny]:
+                travelers[i] = (nx, ny)
+                ans += 1
+                continue
 
 
-d_xy = [(0,-1), (0,1), (-1,0), (1,0)]
+# 가장 작은 정사각형 찾기
+def find_minimum_square():
+    global sx, sy, square_size
+    # 한 명 이상의 참가자, 출구를 포함해야 함
 
-result = 0
+    ex, ey = exit
+    # 참가자 확인
+    for sz in range(2, N):
+        for x1 in range(1, N-sz+2):
+            for y1 in range(1, N-sz+2):
+                x2, y2 = x1+sz-1, y1+sz-1
+
+                if not (x1 <= ex <= x2 and y1 <= ey <= y2):
+                    continue
+
+                is_traveler_in = False
+                for i in range(1, M+1):
+                    tx, ty = travelers[i]
+
+                    if x1<=tx and tx<=x2 and y1<=ty and ty<=y2:
+                        if not (tx==ex and ty==ey):
+                            is_traveler_in = True
+
+                    if is_traveler_in:
+                        sx = x1
+                        sy = y1
+                        square_size = sz
+
+                        return
+
+
+# 미로 회전
+def rotate_square():
+    # 해당 부분의 벽 -1
+    for x in range(sx, sx+square_size):
+        for y in range(sy, sy+square_size):
+            if board[x][y]:
+                board[x][y] -= 1
+
+    for x in range(sx, sx+square_size):
+        for y in range(sy, sy+square_size):
+            ox, oy = x-sx, y-sy
+            rx, ry = oy, square_size-ox-1
+            new_board[sx+rx][sy+ry] = board[x][y]
+
+    for x in range(sx, sx+square_size):
+        for y in range(sy, sy+square_size):
+            board[x][y] = new_board[x][y]
+
+def rotate_travlers_and_exit():
+    global exit
+
+    # 여행자 회전
+    for i in range(1, M+1):
+        tx, ty = travelers[i]
+
+        if sx<=tx and tx<sx+square_size and sy<=ty and ty<sy+square_size:
+            ox, oy = tx-sx, ty-sy
+            rx, ry = oy, square_size-ox-1
+            travelers[i] = (sx+rx, sy+ry)
+
+    # 출구 회전
+    ex, ey = exit
+
+    if sx<=ex and ex<sx+square_size and sy<=ey and ey<sy+square_size:
+        ox, oy = ex-sx, ey-sy
+        rx, ry = oy, square_size-ox-1
+        exit = (sx+rx, sy+ry)
+
 
 for cnt in range(K):
-    # print("@@@@@@@@@@", cnt+1,"회차입니당", "@@@@@@@@@@@")
-    shortest_pos = [-1, -1]
-    shortest_dist = check_dist((1, 1), (N, N))
-    # BFS로 다 돌려보기
-    for idx, member in enumerate(members):
-        print("member 보여줍시다", member)
-        is_remove = False
-        x, y = member
+    move_travelers()
 
-        if (x,y)!=(-1,-1):
-            move_list = []
-            for i in range(4):
-                nx = x + d_xy[i][0]
-                ny = y + d_xy[i][1]
+    is_all_exited = True
+    for i in range(1, M+1):
+        if travelers[i] != exit:
+            is_all_exited = False
 
-                if nx<1 or nx>N or ny<1 or ny>N or 10>maps[nx][ny]>0:
-                    continue
-                if maps[nx][ny]==100:
-                    maps[x][y] = 0
-                    result += 1
+    if is_all_exited:
+        break
 
-                    members[idx] = [-1, -1]
-                    # print(members[idx])
-                    # print("제거!", members)
+    find_minimum_square()
+    rotate_square()
+    rotate_travlers_and_exit()
 
-                    is_remove = True
-                    break
-
-                check = check_short((x,y),(nx, ny),exit)
-                if check:
-                    move_list.append([nx, ny])
-
-            if not is_remove:
-                if len(move_list)>0:
-                    # print("move_list: ", move_list)
-                    members[idx] = list(move_list[-1])
-                    # print(member)
-                    maps[members[idx][0]][members[idx][1]] = maps[x][y]
-                    maps[x][y] = 0
-
-
-                    # print(exit)
-
-                    result += 1
-
-                if check_dist(members[idx], exit) < shortest_dist:
-                    shortest_pos = members[idx]
-                    shortest_dist = check_dist(members[idx], exit)
-
-            # print(member)
-            # print(shortests)
-    print("이동 후 확인")
-    print(*maps, sep='\n')
-
-    # 이동 끝나면 회전
-    target = shortest_pos
-    # print(shortest_pos)
-
-    # 정사각형 만들기
-    num = max(abs(target[0]-exit[0])+1, abs(target[1]-exit[1])+1) # 정사각형 한 변
-    # 실제 변의 길이는 num+1, 더할 때는 index+num
-    arr = []
-    for i in range(1, N):
-        for j in range(1, N):
-            sero, garo  = i+num, j+num
-            if garo <= N+1 and sero <= N+1:
-                # print("exit 때문에? ", exit, target, garo, sero, (i, j, num))
-                # print(i<=target[0]<sero, i<=exit[0]<sero, j<=target[1]<garo, j<=exit[1]<garo)
-                if i<=target[0]<sero and i<=exit[0]<sero and j<=target[1]<garo and j<=exit[1]<garo:
-                    # print("여길 못 들어가?")
-                    arr.append((i, j))
-                    break
-    arr.sort(key=lambda x:(x[0],x[1]))
-    box_start = arr[0]
-    print(num, box_start)
-    #
-    print("확인해보자 ==================", cnt+1)
-    print(*maps, sep='\n')
-    print("----")
-    rotate_box(box_start, num, maps, members)
-    # print(*maps, sep='\n')
-
-
-
-print(result)
+print(ans)
 print(*exit, sep=' ')
-
-
-
-
 
 
 
