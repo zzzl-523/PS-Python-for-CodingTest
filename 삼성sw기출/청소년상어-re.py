@@ -35,7 +35,7 @@ def shark_move(maps, fish_arr, shark, total):
 
     print("====== 물고기 이동 완료 ======")
     print(*maps, sep='\n')
-    print("물고기 목록: ", *fish_arr, sep='\n')
+    print("물고기 목록: ", *fish_arr)
 
     for idx in range(4):
         new_maps = [[] for _ in range(4)]
@@ -55,16 +55,20 @@ def shark_move(maps, fish_arr, shark, total):
             new_fish = fish_arr[i]
             new_fish_arr[i] = [new_fish[0], new_fish[1], new_fish[2]]
 
-        if total + maps[nx][ny] > result:
-            result = total + maps[nx][ny]
+        new_total = total + maps[nx][ny]
+        if new_total > result:
+            result = new_total
 
-        shark_move(new_maps, new_fish_arr, [(nx, ny), shark[1]], total)
+        print(new_total)
+        print(result)
+
+        shark_move(new_maps, new_fish_arr, [(nx, ny), shark[1]], new_total)
 
 
     return
 
 def fish_move(maps, fish_arr, shark):
-    for idx in range(1, len(fish_arr)):
+    for idx in range(1, len(fish_arr)+1):
         fish = fish_arr[idx]
         num, pos, dir = fish
         x, y = pos
@@ -92,8 +96,8 @@ def fish_move(maps, fish_arr, shark):
                 # print(maps[x][y], maps[nx][ny])
                 maps[x][y], maps[nx][ny] = maps[nx][ny], maps[x][y] # 그냥 숫자
 
-                # print("이동 후 ============")
-                # print(*maps, sep='\n')
+                print("이동 후 ============", num)
+                print(*maps, sep='\n')
 
                 break
 
