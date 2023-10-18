@@ -8,84 +8,33 @@ import sys
 input = sys.stdin.readline
 
 N = int(input())
-sik = input()
-# 괄호 안에는 숫자 2개, 연산자 1개만 가능
+sik = list(input().rstrip())
 
-total = 0
+answer = -123456789
 
-is_plus = False
-is_minus = False
-is_multiple = False
-is_gwalho = False
+def check(sik, idx):
+    global answer
 
-def command(command):
-    global is_plus, is_minus, is_multiple, is_gwalho
-
-    if command == '+':
-        is_plus = True
-    elif command == '-':
-        is_minus = True
-    elif command == '*':
-        is_multiple = True
-    elif command == '(':
-        is_gwalho = True
-    elif command == ')':
-        is_gwalho = False
-
-def calculate(num, sik_num):
-    print(sik_num)
-    if sik_num ==' \n':
-        return
+    if idx >= len(sik)-1:
+        # print(sik)
+        result = int(sik[0])
+        for i in range(1,len(sik)-1):
+            if sik[i]=='+':
+                result+=int(sik[i+1])
+            elif sik[i]=='-':
+                result-=int(sik[i+1])
+            elif sik[i]=='*':
+                result*=int(sik[i+1])
         
-    if is_plus:
-        num += int(sik_num)
-    if is_minus:
-        num -= int(sik_num)
-    if is_multiple:
-        num *= int(sik_num)
-    return num
+        answer = max(answer, result)
+        return 
 
-
-def calculator(sik):
-    result = 0
-
-    gwalho_num = 0
-    
-    for i in range(len(sik)):
-        if sik[i]=='+' or sik[i]=='-' or sik[i]=='*' or sik[i]=='(' or sik[i]==')':
-            command(sik[i])
-            if sik[i]==')':
-                result = calculate(result, gwalho_num)
-            continue
-
-        if is_gwalho:
-            gwalho_num = calculate(gwalho_num,sik[i])
-        else:
-            result = calculate(result,sik[i])
-
-    return result
-            
-        
-
-# 일단 걍 다 돌려보기
-def check(siksik, idx, total):
-    new_sik = siksik
-    arr1 = new_sik[:idx-1]
-    arr2 = new_sik[idx+2:]
-    arr = '('+new_sik[idx-1:idx+2]+')'
-
-    # print("출력 확인: ", arr1, arr, arr2)
-    if len(arr)< 3+2 and len(arr2)<3:
-        total = calculator(siksik)
-        return total
-        
-    
     # 괄호 X
-    check(siksik, (idx+2), total)
+    check(sik, idx+2)
 
     # 괄호 O
-    check(arr1+arr+arr2, (idx+4)+2, total)
+    new_sik = sik[:idx]+[str(eval(''.join(sik[idx:idx+3])))]+sik[idx+3:]
+    check(new_sik, idx+2)
 
-
-answer = check(sik, 1, total)
+check(sik, 0)
 print(answer)
