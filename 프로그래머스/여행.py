@@ -2,12 +2,7 @@ def find(time, arr, visited, prev, result):
     global answer
     nomore = True
     if len(result)==len(arr)+1:
-        if not answer:
-            answer = result
-        else:
-            temp = [answer, result]
-            temp.sort()
-            answer = temp[0]
+        answer = result
 
     for i in range(len(arr)):
         # 이전 도착지 == 지금 출발지
@@ -39,6 +34,7 @@ def solution(tickets):
         result = arr[i]
         find(i+1, arr, visited, arr[i][1], result)
     
-    # answer.sort()
-    # answer = answer[0]
+    answer.sort()
+    answer = answer[0]
     return answer
+
