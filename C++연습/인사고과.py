@@ -8,8 +8,6 @@ def solution(scores):
     me = sum(scores[0])
     scores.sort(key=lambda x:(-x[0],x[1]))
     
-    # answer = [0 for _ in range(sum(sorted(scores, key=lambda x:-(x[0]+x[1]))[0])+1)]
-    # print(answer)
     answer = []
     
     prev = scores[0]
