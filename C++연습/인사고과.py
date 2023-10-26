@@ -30,7 +30,6 @@ def solution(scores):
             break
 
     return -1
-    # print(answer[me])
     
 
     # return answer
