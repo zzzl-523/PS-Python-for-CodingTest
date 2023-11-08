@@ -6,36 +6,28 @@
 
 import copy
 N = int(input())
-ans = 10*81
+# ans = 10**81
 
 def check(arr):
-    for i in range(2,(len(arr)//2)+1):
+    for i in range(1,(len(arr)//2)+1):
         if arr[len(arr) - i:] == arr[len(arr) - i*2 :  len(arr) - i ]:
             return False
     
     return True
         
 
-def dfs(arr, num):
-    global ans
+def dfs(num):
+    # global ans
 
-    if not check(arr):
-        return
-    if len(arr)==N:
-        ans = min(ans, int(''.join(arr)))
+    if len(num)==N:
+        # ans = min(ans, int(num))
+        # print(ans)
+        print(num)
+        exit()
     
-    if num == 1:
-        dfs(copy.deepcopy(arr)+[2], 2)
-        dfs(copy.deepcopy(arr)+[3], 3)
-    elif num == 2:
-        dfs(copy.deepcopy(arr)+[1], 1)
-        dfs(copy.deepcopy(arr)+[3], 3)
-    elif num == 3:
-        dfs(copy.deepcopy(arr)+[2], 2)
-        dfs(copy.deepcopy(arr)+[1], 1)
+    for i in '123':
+        if check(num+str(i)):
+            dfs(num+str(i))
 
  
-for i in range(3):
-    dfs([i], i)
-
-print(ans)
+dfs('1')
