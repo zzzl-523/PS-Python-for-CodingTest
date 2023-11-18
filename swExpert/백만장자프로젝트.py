@@ -7,52 +7,37 @@
 
 # 하락장이면 구매 X
 
-def check_up_down(arr):
-    num = arr[0]
-    for i in range(1, len(arr)):
-        if num < arr[i]:
-            return "up"
-    
-    return "down"
-    
-def recursive(i, stock, total):
-    global ans
-
-    if i==N:
-        ans = max(ans, total)
-        return()
-
-    if stock>0:
-        if prices[i]>(-total/stock):
-            # 판매
-            recursive(i+1, 0, total+prices[i]*stock)
-    
-    # 팔기
-    recursive(i+1, stock+1, total-prices[i])
-    # 팔기 X
-    recursive(i+1, stock, total)
-
+# 뒤에서부터 오면서 max_value보다 작으면 구매
+# 새로운 max_value 나오면 이전 max로 팔고 반복
 
 def solution(t):
+    N = int(input())
+    prices = list(map(int, input().split()))
+
     print('#'+str(t), end=' ')
 
-    # 하락장 체크
-    check = check_up_down(prices)
-    if check=="down":
-        print(0)
-        return()
-    
+    max_value = prices[-1]
+    stock_cnt = 0
+    ans = 0
+    for i in range(N-2, -1, -1):
+        if prices[i] > max_value:
+            ans += max_value*stock_cnt # 이전 것들은 이전 max로 팔기
+            stock_cnt = 0
+            max_value = prices[i] # max 업데이트
 
-    recursive(0, 0, 0)
+        elif prices[i] < max_value:
+            ans -= prices[i]
+            stock_cnt += 1
+    
+    if stock_cnt>0:
+        ans += max_value*stock_cnt
+    
     print(ans)
 
-    
+
 T = int(input())
 N = 0
 prices = []
 ans = 0
 for t in range(1, T+1):
-    ans = 0
-    N = int(input())
-    prices = list(map(int, input().split()))
     solution(t)
