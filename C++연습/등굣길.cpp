@@ -25,6 +25,5 @@ int solution(int m, int n, vector<vector<int>> puddles) {
         }
     }
     answer = dp[m][n];
-    
     return answer;
 }
