@@ -40,3 +40,4 @@ for i in range(n):
         heapq.heappush(rightHeap, -leftValue)
 
     print(-leftHeap[0])
+    
