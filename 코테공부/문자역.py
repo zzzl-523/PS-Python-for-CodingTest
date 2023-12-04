@@ -2,21 +2,20 @@
 # 골드4
 # 스택
 
-# re 써보기
-import re
 import sys
 input = sys.stdin.readline
 
 text = input().strip()
 bomb = input().strip()
 
-while True:
-    if bomb not in text:
-        break
-    arr = re.split(bomb, text)
-    text = ''.join(arr)
+st = []
+for i in range(len(text)):
+    st.append(text[i])
+    if ''.join(st[-len(bomb):]) == bomb:
+        for _ in range(len(bomb)):
+            st.pop()
 
-if text:
-    print(text)
+if len(st)>0:
+    print(''.join(st))
 else:
     print("FRULA")
